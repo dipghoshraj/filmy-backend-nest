@@ -9,8 +9,6 @@ async function bootstrap() {
     .setTitle('filmy profile')
     .setDescription('The filmy profile API description')
     .setVersion('0.1')
-    .addTag('Authentication')
-    .addTag('*')
     .addBearerAuth({
       description: `[just text field] Please enter token in following format: Bearer <JWT>`,
       name: 'Authorization',
