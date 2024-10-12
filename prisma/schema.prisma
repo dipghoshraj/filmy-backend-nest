@@ -33,4 +33,13 @@ model user {
 
   date_of_birth DateTime?
   datails Json?
+  usertype userType[]
+}
+
+
+enum userType {
+  director
+  admin
+  managedUser
+  normUser
 }
