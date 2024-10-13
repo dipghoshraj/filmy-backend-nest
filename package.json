@@ -25,7 +25,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.2",
-    "@prisma/client": "^5.19.1",
+    "@prisma/client": "^5.20.0",
     "class-validator": "^0.14.1",
     "filmy-backend-nest": "file:",
     "reflect-metadata": "^0.2.0",
