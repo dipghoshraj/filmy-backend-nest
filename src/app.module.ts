@@ -5,8 +5,8 @@ import {PrismaModule} from './prisma/prisma.module';
 import { UserModule } from './v1/user/user.module';
 
 @Module({
-  imports: [UserModule],
-  controllers: [AppController, PrismaModule],
+  imports: [UserModule, PrismaModule],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
