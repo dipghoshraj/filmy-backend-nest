@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, user, userType } from '@prisma/client';
-
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class UserService {
