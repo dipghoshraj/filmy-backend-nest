@@ -37,6 +37,10 @@ export class UserService {
     return {...userObj, token}
   }
 
+  async sendOtp(mobile: string){
+    
+  }
+
   findAll() {
     return `This action returns all user`;
   }
