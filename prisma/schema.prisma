@@ -13,6 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
 model user {
   id Int     @default(autoincrement()) @id
   email String? @unique
@@ -36,6 +38,12 @@ model user {
   usertype userType[]
 }
 
+
+model Image{
+  id Int @default(autoincrement()) @id
+  name String?
+  url String?
+}
 
 enum userType {
   director
