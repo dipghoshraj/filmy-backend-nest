@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 
-import {IsNotEmpty, IsEmail, Length, Matches, isEmail, IsString, IsArray, IsEnum, IsDate} from 'class-validator'
+import {IsNotEmpty, IsEmail, Length, Matches, isEmail, IsString, IsArray, IsEnum, IsDate, isString} from 'class-validator'
 
 export class CreateUserDto {
 
@@ -29,4 +29,23 @@ export class CreateUserDto {
     @ApiProperty()
     @IsDate({message: 'Please enter your DOB'})
     dateOfBirth: Date;
+}
+
+export class SendUserDto {
+
+    @ApiProperty()
+    @Matches(/^(\+\d{1,3}[- ]?)?\d{10}$/, { message: 'Invalid mobile number' })
+    mobile: string;
+}
+
+
+export class ValidateOtpDto {
+
+    @ApiProperty()
+    @Matches(/^(\+\d{1,3}[- ]?)?\d{10}$/, { message: 'Invalid mobile number' })
+    mobile: string;
+
+    @ApiProperty()
+    @Length(6, 6, {message: 'plese enter otp'})
+    otp: string;
 }

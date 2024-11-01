@@ -4,14 +4,21 @@ import { UserController } from './user.controller';
 
 import {PrismaModule} from 'src/prisma/prisma.module';
 import { RedisModule } from 'src/redis/redis.module';
-import { BullModule } from '@nestjs/bullmq';
+import { BullModule } from '@nestjs/bull';
 
 
 @Module({
   imports: [PrismaModule, RedisModule,
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost', // use the service name from docker-compose if its different
+        port: 6379,
+      }
+    }),
+
     BullModule.registerQueue({
-      name: 'sendotp',
-    })
+      name: "sendotp",
+    }),
   ],
   controllers: [UserController],
   providers: [UserService],

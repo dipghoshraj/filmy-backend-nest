@@ -2,19 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './v1/user/user.module';
-import { BullModule } from '@nestjs/bullmq';
+import {OtpProcessor} from './v1/user/user.process'
 
 
 @Module({
-  imports: [UserModule,
-    BullModule.forRoot({
-      connection: {
-        host: 'localhost',
-        port: 6379,
-      },
-    }),
-  ],
+  imports: [UserModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, OtpProcessor],
 })
 export class AppModule {}
