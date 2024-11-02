@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { CreateUserDto, SendUserDto, ValidateOtpDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -20,6 +20,7 @@ export class UserService {
 
 
   async create(createUserDto: CreateUserDto) {
+
     const userdata : Prisma.userCreateInput = {
       mobile: createUserDto.mobile,
       username: createUserDto?.username,
@@ -28,6 +29,9 @@ export class UserService {
       lastName: createUserDto?.lastName,
       date_of_birth: createUserDto?.dateOfBirth,
     };
+
+    const validateotp = this.redis.get(`verify:${createUserDto.mobile}`)
+    if (!validateotp) throw new BadRequestException();
 
     const selectObj : Prisma.userSelect = UserResponse.userprofile()
     const userObj : UserResponse=  await this.prisma.user.create({
@@ -44,7 +48,7 @@ export class UserService {
     const mobile = sendUserDto.mobile
     const otp= Math.floor(Math.random() * 1000000)
     const message = encodeURIComponent(`Your otp is ${otp}`)
-    this.redis.set(`${mobile}`, otp.toString(), 900)
+    this.redis.set(`otp:${mobile}`, otp.toString(), 900)
 
     return await this.queue.add(
       'process_data',
@@ -55,18 +59,14 @@ export class UserService {
 
   async verifyOtp(validateDto: ValidateOtpDto){
 
-    const storeotp = await this.redis.get(`${validateDto.mobile}`);
+    const storeotp = await this.redis.get(`otp:${validateDto.mobile}`);
     if (storeotp == validateDto.otp){
       const user = await this.findMobile(validateDto.mobile)
       const ispresent = user ? true : false;
-      return {otpvalidate: true, ispresent: user}
+      this.redis.set(`verify:${validateDto.mobile}`, 'true', 300)
+      return {otpvalidate: true, user: user, ispresent: ispresent}
     }
-    throw new UnauthorizedException();
-  }
-
-  async checkExists(mobile: string){
-    const user = await this.prisma.user.findFirst({where: {mobile: mobile}})
-    return user
+    throw new BadRequestException();
   }
 
   async findMobile(mobile: string){
@@ -83,14 +83,19 @@ export class UserService {
     this.redis.set(token, `${userObj.id}`,24*3600)
     return {...userObj, token}
   }
-
+ 
 
   findAll() {
     return `This action returns all user`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async finduser(identifier : {id?: number, username?: string, email?: string, mobile?: string}) {
+    const select : Prisma.userSelect = {
+      ...UserResponse.userprofile()
+    }
+    const where : Prisma.userWhereInput = identifier
+    const userObj : UserResponse = await this.prisma.user.findFirst({select, where})
+    return userObj
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
