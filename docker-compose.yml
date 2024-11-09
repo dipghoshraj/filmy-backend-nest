@@ -6,7 +6,8 @@ services:
       context: .
     container_name: be-app
     environment:
-      DATABASE_URL:
+      DATABASE_URL: "postgresql://postgres:filmy2024@postgresql:5432/fimlydb_2024?schema=public"
+      REDIS_HOST: "redis"
     
     ports: 
     - "3000:3000"
