@@ -30,6 +30,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
     // Example of deleting OTP (optional)
     async delete(key: string): Promise<number> {
-    return this.client.del(key);
+        return this.client.del(key);
     }
 }
