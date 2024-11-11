@@ -14,4 +14,4 @@ EXPOSE 3000
 
 CMD ["npm", "start", "build"]
 
-CMD ["npm", "run", "start:prod"]
+# CMD ["npm", "run", "start:prod"]
