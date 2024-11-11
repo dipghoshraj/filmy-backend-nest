@@ -12,7 +12,7 @@ import { env } from 'process';
   imports: [PrismaModule, RedisModule,
     BullModule.forRoot({
       redis: {
-        host: env.REDIS_HOST, // use the service name from docker-compose if its different
+        host: env.REDIS_HOST || 'redis', // use the service name from docker-compose if its different
         port: 6379,
       }
     }),
