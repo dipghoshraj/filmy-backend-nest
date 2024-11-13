@@ -50,11 +50,17 @@ export class UserService {
     const message = encodeURIComponent(`Your otp is ${otp}`)
     this.redis.set(`otp:${mobile}`, otp.toString(), 900)
 
-    return await this.queue.add(
+    const user = await this.findMobile(sendUserDto.mobile)
+    const ispresent = Object.keys(user).length == 0 ?  false : true;
+
+    console.log("ueer is ", user)
+
+    const {id, name} = await this.queue.add(
       'process_data',
       { message:  message, mobile: mobile},
       { priority: 1 },
     );
+    return {success: true, id, name, ispresent}
   }
 
   async verifyOtp(validateDto: ValidateOtpDto){

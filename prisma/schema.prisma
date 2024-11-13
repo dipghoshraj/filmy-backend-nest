@@ -45,6 +45,11 @@ model Image{
   url String?
 }
 
+model Post{
+  id Int @default(autoincrement()) @id
+  name String?
+}
+
 enum userType {
   director
   admin

@@ -4,6 +4,7 @@ WORKDIR /app
 # Install app dependencies
 COPY package.json ./
 RUN npm install
+COPY .env.prod .env
 
 # Copy app source code
 COPY . .
@@ -12,6 +13,6 @@ RUN npx prisma generate
 # Expose the application port
 EXPOSE 3000
 
-CMD ["npm", "start", "build"]
+CMD ["sh", "deployment.sh"]
 
 # CMD ["npm", "run", "start:prod"]
