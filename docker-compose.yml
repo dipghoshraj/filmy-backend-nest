@@ -37,16 +37,16 @@ services:
     volumes:
       - redis_data:/data
   
-  # ngrok-service-2:
-  #   image: wernight/ngrok
-  #   container_name: ngrok_service_2
-  #   depends_on:
-  #     - upload-service
-  #   command: "ngrok http host.docker.internal:8000"
-  #   environment:
-  #     NGROK_AUTHTOKEN: "2NhDgNikurKmfP5Tz2j4vi2MCQs_2wCC5XgTkXBFZtR8MwdHB"
-  #   ports:
-  #     - "4041:4040"
+  ngrok-service-2:
+    image: wernight/ngrok
+    container_name: ngrok_service_2
+    depends_on:
+      - node-app
+    command: "ngrok http host.docker.internal:8000"
+    environment:
+      NGROK_AUTHTOKEN: "2NhDgNikurKmfP5Tz2j4vi2MCQs_2wCC5XgTkXBFZtR8MwdHB"
+    ports:
+      - "4041:4040"
 
 volumes:
   postgres_data:
