@@ -53,14 +53,16 @@ export class UserService {
     const user = await this.findMobile(sendUserDto.mobile)
     const ispresent = Object.keys(user).length == 0 ?  false : true;
 
-    console.log("ueer is ", user)
+    if(ispresent){
+      const {id, name} = await this.queue.add(
+        'process_data',
+        { message:  message, mobile: mobile},
+        { priority: 1 },
+      );
+    }
 
-    const {id, name} = await this.queue.add(
-      'process_data',
-      { message:  message, mobile: mobile},
-      { priority: 1 },
-    );
-    return {success: true, id, name, ispresent}
+    console.log("ueer is ", user)
+    return {ispresent, queued: ispresent}
   }
 
   async verifyOtp(validateDto: ValidateOtpDto){
@@ -73,7 +75,7 @@ export class UserService {
       return {otpvalidate: true, user: user, ispresent: ispresent}
     }
     throw new BadRequestException();
-  }
+  } 
 
   async findMobile(mobile: string){
     const select : Prisma.userSelect = {

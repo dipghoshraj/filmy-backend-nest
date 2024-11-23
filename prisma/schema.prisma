@@ -36,6 +36,7 @@ model user {
   date_of_birth DateTime?
   datails Json?
   usertype userType[]
+  images Image[]
 }
 
 
@@ -43,11 +44,27 @@ model Image{
   id Int @default(autoincrement()) @id
   name String?
   url String?
+  user_id Int
+  post_id Int?
+  image_matadata_id Int @unique
+  post Post? @relation(fields: [post_id], references: [id])
+  user user @relation(fields: [user_id], references: [id])
+  imageMeatadata ImageMetadata @relation(fields: [image_matadata_id], references: [id])
 }
 
 model Post{
   id Int @default(autoincrement()) @id
   name String?
+  images Image[]
+}
+
+model ImageMetadata{
+  id Int @default(autoincrement()) @id
+  key String
+  file_path String
+  upload_time DateTime?
+  image_id Int?
+  image Image?
 }
 
 enum userType {
