@@ -27,7 +27,8 @@ export class UserService {
       email: createUserDto?.email,
       firstName: createUserDto?.firstName,
       lastName: createUserDto?.lastName,
-      date_of_birth: createUserDto?.dateOfBirth,
+      date_of_birth: `${createUserDto?.dateOfBirth}T00:00:00Z`,
+
     };
 
     const validateotp = this.redis.get(`verify:${createUserDto.mobile}`)
@@ -52,6 +53,8 @@ export class UserService {
 
     const user = await this.findMobile(sendUserDto.mobile)
     const ispresent = Object.keys(user).length == 0 ?  false : true;
+
+    console.log(message);
 
     if(ispresent){
       const {id, name} = await this.queue.add(

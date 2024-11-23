@@ -61,8 +61,12 @@ model Post{
 model ImageMetadata{
   id Int @default(autoincrement()) @id
   key String
-  file_path String
+  file_bucket String?
   upload_time DateTime?
+  size Int?
+  extension String?
+  etag String?
+  version String?
   image_id Int?
   image Image?
 }

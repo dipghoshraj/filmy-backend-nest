@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 
-import {IsNotEmpty, IsEmail, Length, Matches, isEmail, IsString, IsArray, IsEnum, IsDate, isString} from 'class-validator'
+import {IsNotEmpty, IsEmail, Length, Matches, isEmail, IsString, IsArray, IsEnum, IsDate, IsDateString} from 'class-validator'
 
 export class CreateUserDto {
 
@@ -27,7 +27,7 @@ export class CreateUserDto {
     lastName: string;
 
     @ApiProperty()
-    @IsDate({message: 'Please enter your DOB'})
+    @IsDateString()
     dateOfBirth: Date;
 }
 
