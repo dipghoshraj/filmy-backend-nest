@@ -42,7 +42,7 @@ services:
     container_name: ngrok_service_2
     depends_on:
       - node-app
-    command: "ngrok http host.docker.internal:8000"
+    command: "ngrok http 172.17.0.1:8000"
     environment:
       NGROK_AUTHTOKEN: "2NhDgNikurKmfP5Tz2j4vi2MCQs_2wCC5XgTkXBFZtR8MwdHB"
     ports:
