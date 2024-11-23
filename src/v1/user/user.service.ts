@@ -56,13 +56,13 @@ export class UserService {
 
     console.log(message);
 
-    if(ispresent){
-      const {id, name} = await this.queue.add(
-        'process_data',
-        { message:  message, mobile: mobile},
-        { priority: 1 },
-      );
-    }
+    // if(ispresent){
+    const {id, name} = await this.queue.add(
+      'process_data',
+      { message:  message, mobile: mobile},
+      { priority: 1 },
+    );
+    // }
 
     console.log("ueer is ", user)
     return {ispresent, queued: ispresent}
