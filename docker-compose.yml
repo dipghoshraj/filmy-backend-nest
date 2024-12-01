@@ -61,9 +61,8 @@ services:
       context: .
     container_name: be-app
     environment:
-      DATABASE_URL: "postgresql://postgres:filmy2024@172.17.0.1:5432/fimlydb_2024?schema=public"
-      REDIS_HOST: "172.17.0.1"
-    # command: ["npm", "run", "start:prod"]
+      DATABASE_URL: "postgresql://postgres:filmy2024@postgresql:5432/fimlydb_2024?schema=public"
+      REDIS_HOST: "redis"
     networks:
       - broker-kafka
     ports: 
@@ -117,12 +116,19 @@ services:
       context: ./media-service/upload-image
       dockerfile: Dockerfile
     container_name: upload-service
+    environment:
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:filmy2024@postgresql:5432/fimlydb_2024"
+      MINIO_HOST: "minio:9000"
+      MINIO_ACCESS_KEY: "minioadmin"
+      MINIO_ACCESS_SECRET: "minioadmin"
     ports:
       - "8000:8000"
     networks:
       - broker-kafka
     depends_on:
       - minio
+      - postgresql
+      - redis
 
 
 
