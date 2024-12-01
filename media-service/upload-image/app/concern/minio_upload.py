@@ -6,20 +6,20 @@ from app.model import db
 from app.model.Image import Image
 from app.model.ImageMetadata import ImageMetadata
 from io import BytesIO
-
+from app.config import Config
 class Uploader:
 
     def __init__(self):
-        self.client = Minio("minio:9000",access_key="minioadmin",secret_key="minioadmin", secure=False)
+        self.client = Minio(Config.MINIO_HOST, access_key=Config.MINIO_ACCESS_KEY, secret_key= Config.MINIO_ACCESS_SECRET, secure=False)
 
     def fetch(self, image_key):
-        """
+        """ Fetch the image metadata with key
         """
         meta_data = db.session.query(ImageMetadata).filter(ImageMetadata.key == image_key).first()
         return meta_data
     
     def get_image(self, image_key):
-        """
+        """Get image object with idenitifer URL
         """
 
         meta_data = db.session.query(ImageMetadata).filter(ImageMetadata.key == image_key).first()
