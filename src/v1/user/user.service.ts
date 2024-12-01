@@ -28,7 +28,9 @@ export class UserService {
       firstName: createUserDto?.firstName,
       lastName: createUserDto?.lastName,
       date_of_birth: `${createUserDto?.dateOfBirth}T00:00:00Z`,
-
+      city_name: createUserDto?.city,
+      age: createUserDto?.age,
+      about_info: createUserDto?.about_info
     };
 
     const validateotp = this.redis.get(`verify:${createUserDto.mobile}`)

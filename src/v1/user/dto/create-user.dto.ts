@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 
-import {IsNotEmpty, IsEmail, Length, Matches, isEmail, IsString, IsArray, IsEnum, IsDate, IsDateString} from 'class-validator'
+import {IsEmail, Length, Matches, IsString, IsDateString, Min, IsNumber} from 'class-validator'
 
 export class CreateUserDto {
 
@@ -29,6 +29,19 @@ export class CreateUserDto {
     @ApiProperty()
     @IsDateString()
     dateOfBirth: Date;
+
+    @ApiProperty()
+    @IsString()
+    city: string;
+
+    @ApiProperty()
+    @Length(10, 500)
+    about_info: string;
+
+    @ApiProperty()
+    @IsNumber()
+    @Min(10)
+    age: number;
 }
 
 export class SendUserDto {

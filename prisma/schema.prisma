@@ -69,6 +69,7 @@ model ImageMetadata{
   version String?
   image_id Int?
   image Image?
+  is_pp Boolean @default(false)
 }
 
 enum userType {
