@@ -1,6 +1,61 @@
 
 
 services:
+
+  # kafka:
+  #   image: confluentinc/cp-kafka:latest
+  #   container_name: kafka
+  #   networks:
+  #     - broker-kafka
+  #   depends_on:
+  #     - zookeeper
+  #   restart: on-failure
+  #   ports:
+  #     - "9092:9092"
+  #     - "9101:9101"
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ADVERTISED_HOST_NAME: kafka:9092
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  #     KAFKA_CREATE_TOPICS: "image_uploads"
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
+
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:latest
+  #   container_name: zookeeper
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   networks:
+  #     - broker-kafka
+  #   ports:
+  #     - "2181:2181"
+
+
+   # kafka-consumer:
+  #   build:
+  #     context: ./kafka-consumer
+  #     dockerfile: Dockerfile
+  #   container_name: kafka-consumer
+  #   networks:
+  #     - broker-kafka
+  #   depends_on:
+  #     - kafka
+  #     - minio
+  #   restart: always
+  #   environment:
+  #     MINIO_URL: "http://minio:9000"
+  #     MINIO_ACCESS_KEY: "minioadmin"
+  #     MINIO_SECRET_KEY: "minioadmin"
+  #     KAFKA_BROKER_URL: "kafka:29092"
+  
+
+
   node-app:
     build:
       context: .
@@ -9,7 +64,8 @@ services:
       DATABASE_URL: "postgresql://postgres:filmy2024@172.17.0.1:5432/fimlydb_2024?schema=public"
       REDIS_HOST: "172.17.0.1"
     # command: ["npm", "run", "start:prod"]
-    
+    networks:
+      - broker-kafka
     ports: 
     - "3000:3000"
     depends_on:
@@ -26,6 +82,8 @@ services:
       POSTGRES_DB: fimlydb_2024
     ports:
       - "5432:5432"
+    networks:
+      - broker-kafka
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -34,9 +92,45 @@ services:
     container_name: redis-app
     ports:
       - "6379:6379"
+    networks:
+      - broker-kafka
     volumes:
       - redis_data:/data
+
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    networks:
+      - broker-kafka
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+
+  upload-service:
+    build:
+      context: ./media-service/upload-image
+      dockerfile: Dockerfile
+    container_name: upload-service
+    ports:
+      - "8000:8000"
+    networks:
+      - broker-kafka
+    depends_on:
+      - minio
+
+
+
+networks:
+  broker-kafka:
+    driver: bridge
 
 volumes:
   postgres_data:
   redis_data:
+  minio-data:
