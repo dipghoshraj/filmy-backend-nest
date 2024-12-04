@@ -61,7 +61,7 @@ services:
       context: .
     container_name: be-app
     environment:
-      DATABASE_URL: "postgresql://postgres:filmy2024@postgresql:5432/fimlydb_2024?schema=public"
+      DATABASE_URL: "postgresql://postgres:dipghosh099@host.docker.internal:5432/fimlydb_2024?schema=public"
       REDIS_HOST: "redis"
     networks:
       - broker-kafka
@@ -117,7 +117,7 @@ services:
       dockerfile: Dockerfile
     container_name: upload-service
     environment:
-      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:filmy2024@postgresql:5432/fimlydb_2024"
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:dipghosh099@host.docker.internal:5432/fimlydb_2024"
       MINIO_HOST: "minio:9000"
       MINIO_ACCESS_KEY: "minioadmin"
       MINIO_ACCESS_SECRET: "minioadmin"
