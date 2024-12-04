@@ -67,7 +67,7 @@ export class UserService {
     // }
 
     console.log("ueer is ", user)
-    return {ispresent, queued: ispresent}
+    return {ispresent, queued: true}
   }
 
   async verifyOtp(validateDto: ValidateOtpDto){
@@ -75,7 +75,8 @@ export class UserService {
     const storeotp = await this.redis.get(`otp:${validateDto.mobile}`);
     if (storeotp == validateDto.otp){
       const user = await this.findMobile(validateDto.mobile)
-      const ispresent = user ? true : false;
+      // const ispresent = user ? true : false;
+      const ispresent = Object.keys(user).length == 0 ?  false : true;
       this.redis.set(`verify:${validateDto.mobile}`, 'true', 300)
       return {otpvalidate: true, user: user, ispresent: ispresent}
     }
